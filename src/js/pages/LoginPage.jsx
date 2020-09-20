@@ -19,6 +19,7 @@ const LoginPage = ({ history }) => {
     setCredential({ ...credentials, [name]: value });
   };
 
+  //requete HTTP d'authentification et stockage du token dans le localStorage
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -41,8 +42,6 @@ const LoginPage = ({ history }) => {
         "Aucun compte pour cette utilisateur ou alors les informations ne correspondent pas"
       );
     }
-
-    console.log(credentials);
   };
 
   return (

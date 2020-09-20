@@ -38,11 +38,7 @@ const ArticlesPage = (props) => {
       url: "http://localhost:8000/api/articles/" + id,
       method: "DELETE",
       dataType: "json",
-      success: function (response, textStatus, xhr) {
-        console.log(response);
-        console.log(textStatus);
-        console.log(xhr);
-      },
+      success: function (response, textStatus, xhr) {},
       error: function (response, textStatus, xhr) {
         //si ça n'as pas marché je rétabli le tableau des stocks dans son état original
         setArticles(originalArticles);
