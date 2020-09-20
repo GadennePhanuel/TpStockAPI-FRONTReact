@@ -6,6 +6,7 @@ import AuthContext from "./js/contexts/AuthContext";
 import ArticlesPage from "./js/pages/ArticlesPage";
 import HomePage from "./js/pages/HomePage";
 import LoginPage from "./js/pages/LoginPage";
+import StockPage from "./js/pages/StockPage";
 import StocksPage from "./js/pages/StocksPage";
 import AuthAPI from "./js/services/authAPI";
 
@@ -31,6 +32,7 @@ const App = () => {
         <main className="container pt-5">
           <Switch>
             <Route path="/login" component={LoginPage} />
+            <PrivateRoute path="/stocks/:id" component={StockPage} />
             <PrivateRoute path="/stocks" component={StocksPage} />
             <PrivateRoute path="/articles" component={ArticlesPage} />
             <Route path="/" component={HomePage} />

@@ -5,6 +5,7 @@ import AuthContext from "../contexts/AuthContext";
 const Navbar = ({ history }) => {
   const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
+  //supression du token du localStorage
   const handleLogout = () => {
     window.localStorage.removeItem("authToken");
     setIsAuthenticated(false);

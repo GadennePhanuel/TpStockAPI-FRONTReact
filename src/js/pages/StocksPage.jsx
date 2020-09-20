@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
+import { Link } from "react-router-dom";
 
 const StocksPage = (props) => {
   const [stocks, setStocks] = useState([]);
@@ -38,7 +39,7 @@ const StocksPage = (props) => {
       url: "http://localhost:8000/api/stocks/" + id,
       method: "DELETE",
       dataType: "json",
-      success: function (response, textStatus, xhr) {},
+      success: function (response, textStatus, xhr) { },
       error: function (response, textStatus, xhr) {
         //si ça n'as pas marché je rétabli le tableau des stocks dans son état original
         setStocks(originalStocks);
@@ -46,6 +47,14 @@ const StocksPage = (props) => {
       },
     });
   };
+
+  /**
+   * redirection quand on veut editer un stock
+   * @param {*} page 
+   */
+  const handleEdit = (id) => {
+    props.history.replace("/stocks/" + id)
+  }
 
   //PAGINATION && Champ de recherche du tableau
   const handlePageChange = (page) => {
@@ -71,7 +80,12 @@ const StocksPage = (props) => {
 
   return (
     <>
-      <h1>Liste des Stocks</h1>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h1>Liste des Stocks</h1>
+        <Link to="/stocks/new" className="btn btn-primary">
+          Créer un stock
+        </Link>
+      </div>
 
       <div className="form-group">
         <input
@@ -106,7 +120,7 @@ const StocksPage = (props) => {
                 {stock.totalAmountOfArticleInCurrentStock.toLocaleString()} €
               </td>
               <td>
-                <button className="btn btn-sm btn-warning mr-1">Editer</button>
+                <button onClick={() => handleEdit(stock.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
                 <button
                   onClick={() => handleDelete(stock.id)}
                   disabled={stock.totalArticleCurrentStock > 0}
