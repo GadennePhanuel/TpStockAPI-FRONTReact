@@ -13,8 +13,10 @@ const ArticlesPage = (props) => {
       url: "http://localhost:8000/api/articles",
       method: "GET",
       dataType: "json",
+      headers: {
+        Authorization: "Bearer " + window.localStorage.getItem("authToken"),
+      },
       success: function (response, textStatus, xhr) {
-        console.log(response);
         setArticles(response);
       },
       error: function (response) {

@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const HomePage = (props) => {
   return (
@@ -14,9 +15,9 @@ const HomePage = (props) => {
         within the larger container.
       </p>
       <p className="lead">
-        <a className="btn btn-primary btn-lg" href="#" role="button">
+        <NavLink className="btn btn-primary btn-lg" to="#" role="button">
           Learn more
-        </a>
+        </NavLink>
       </p>
     </div>
   );

@@ -13,6 +13,9 @@ const StocksPage = (props) => {
       url: "http://localhost:8000/api/stocks",
       method: "GET",
       dataType: "json",
+      headers: {
+        Authorization: "Bearer " + window.localStorage.getItem("authToken"),
+      },
       success: function (response, textStatus, xhr) {
         setStocks(response);
       },
