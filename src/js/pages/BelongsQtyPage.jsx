@@ -3,6 +3,7 @@ import $ from "jquery";
 import Field from '../components/forms/Field';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import CalloutStripLoader from "../components/loaders/CalloutStripLoader";
 
 const BelongQtyPage = (props) => {
 
@@ -23,6 +24,7 @@ const BelongQtyPage = (props) => {
         setBelong({ ...belong, [name]: value });
     };
 
+    const [loading, setLoading] = useState(true)
 
     // 1. récupére le belong courant
     const { id } = props.match.params
@@ -42,6 +44,7 @@ const BelongQtyPage = (props) => {
                 setErrors({})
                 const { article, stock, qty } = response
                 setBelong({ article, stock, qty })
+                setLoading(false)
             },
             error: function (response) {
 
@@ -98,17 +101,21 @@ const BelongQtyPage = (props) => {
                 <h1>Modifier quantité d'un article</h1>
             </div>
             <div className="d-flex justify-content-between align-items-center mb-5">
-                <h3>Article : {belong.article.label}</h3>
+                <h3>Article :  {!loading && belong.article.label} {loading && <CalloutStripLoader />}</h3>
             </div>
             <div className="d-flex justify-content-between align-items-center mb-5">
-                <h3>Stock : {belong.stock.label}</h3>
+                <h3>Stock : {!loading && belong.stock.label} {loading && <CalloutStripLoader />}</h3>
             </div>
             <form onSubmit={handleSubmit}>
-                <Field name="qty"
-                    label="Quantité"
-                    onChange={handleChange}
-                    value={belong.qty}
-                    error={errors.qty} ></Field>
+                {!loading &&
+                    <Field name="qty"
+                        label="Quantité"
+                        onChange={handleChange}
+                        value={belong.qty}
+                        error={errors.qty} ></Field>
+                }
+                {loading && <CalloutStripLoader />}
+
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">
                         Enregistrer

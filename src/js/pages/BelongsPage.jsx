@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import Select from '../components/forms/Select'
+import CalloutStripLoader from "../components/loaders/CalloutStripLoader";
+import TableLoader from "../components/loaders/TableLoader";
 
 const BelongsPage = (props) => {
 
     const [stocks, setStocks] = useState([]);
     const [belongs, setBelongs] = useState([]);
-
+    const [loading, setLoading] = useState(true)
+    const [loading2, setLoading2] = useState(false)
 
     //1- Auchargement requéte HTTP pour récupérer la liste de mes stocks
     useEffect(() => {
@@ -21,6 +24,7 @@ const BelongsPage = (props) => {
             },
             success: function (response, textStatus, xhr) {
                 setStocks(response);
+                setLoading(false)
             },
             error: function (response) {
                 toast.error("Erreur lors du chargement...")
@@ -41,6 +45,7 @@ const BelongsPage = (props) => {
             dataType: "json",
             success: function (response, textStatus, xhr) {
                 setBelongs(response)
+                setLoading2(false)
             },
             error: function (response) {
                 toast.error("Erreur losr du chargement...")
@@ -51,7 +56,7 @@ const BelongsPage = (props) => {
     //je crée ma fonction handleChange, pour qu'au moment où un stock est selectionné, le tableau de ses articles se remplissent
     const handleChange = (event) => {
         const idStockSelect = event.currentTarget.value  //ici on arrive a récupére l'id du stock selectionné
-
+        setLoading2(true)
         //on appelle notre fonction de call ajax pour récupérer les article
         fetchArticle(idStockSelect);
     }
@@ -106,24 +111,26 @@ const BelongsPage = (props) => {
         </Link>
         </div>
 
-        <div className="text-center pt-3">
-            <h3 className="mb-5">Selectionnez un stock</h3>
-            <Select
-                name='stock'
-                label='Votre stock :'
-                value={stocks.label}
-                //error={errors.stocks}
-                onChange={handleChange}
-            >
-                <option>---Liste déroulante---</option>
-                {stocks.map((stock) => (
-                    <option key={stock.id} value={stock.id}>{stock.label}</option>
-                ))}
-            </Select>
-        </div>
-
+        {!loading &&
+            <div className="text-center pt-3">
+                <h3 className="mb-5">Selectionnez un stock</h3>
+                <Select
+                    name='stock'
+                    label='Votre stock :'
+                    value={stocks.label}
+                    //error={errors.stocks}
+                    onChange={handleChange}
+                >
+                    <option>---Liste déroulante---</option>
+                    {stocks.map((stock) => (
+                        <option key={stock.id} value={stock.id}>{stock.label}</option>
+                    ))}
+                </Select>
+            </div>
+        }
+        {loading && <CalloutStripLoader />}
         <table className="table table-hover mt-1">
-            <thead>
+            <thead >
                 <tr>
                     <th>Référence</th>
                     <th>label</th>
@@ -132,29 +139,30 @@ const BelongsPage = (props) => {
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-                {belongs.map((belong) => (
-                    <tr key={belong.id}>
-                        <td>{belong.article.ref}</td>
-                        <td>{belong.article.label}</td>
-                        <td>{belong.article.price}</td>
-                        <td>{belong.qty}</td>
-                        <td>
-                            <button onClick={() => handleEdit(belong.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
-                            <button
-                                onClick={() => handleDelete(belong.id)}
-                                disabled={belong.qty > 0}
-                                className="btn btn-sm btn-danger"
-                            >
-                                Supprimer
+            {!loading2 &&
+                <tbody>
+                    {belongs.map((belong) => (
+                        <tr key={belong.id}>
+                            <td>{belong.article.ref}</td>
+                            <td>{belong.article.label}</td>
+                            <td>{belong.article.price}</td>
+                            <td>{belong.qty}</td>
+                            <td>
+                                <button onClick={() => handleEdit(belong.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
+                                <button
+                                    onClick={() => handleDelete(belong.id)}
+                                    disabled={belong.qty > 0}
+                                    className="btn btn-sm btn-danger"
+                                >
+                                    Supprimer
                 </button>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            }
         </table>
-
-
+        {loading2 && <TableLoader />}
 
 
 

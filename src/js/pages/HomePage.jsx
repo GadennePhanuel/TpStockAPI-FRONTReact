@@ -4,7 +4,7 @@ const HomePage = (props) => {
   return (
     <div className="jumbotron">
       <h1 className="display-3">Hello, team!</h1>
-      <p>WELCOME SUR MON APPLI SYMFONY APIPLATFORM REACT !!!</p>
+      <p>BIENVENU SUR MON APPLI SYMFONY APIPLATFORM REACT !!!</p>
     </div>
   );
 };

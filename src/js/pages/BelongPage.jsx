@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 import $ from "jquery";
 import Select from '../components/forms/Select'
 import { toast } from 'react-toastify';
+import TableLoader from "../components/loaders/TableLoader";
+import CalloutStripLoader from "../components/loaders/CalloutStripLoader";
 
 const BelongPage = (props) => {
 
     const [stocks, setStocks] = useState([]);
     const [articles, setArticles] = useState([]);
-    const [stockCurrent, setStockCurrent] = useState({});
-
+    const [stockCurrent] = useState({});
+    const [loading, setLoading] = useState(true)
+    const [loading2, setLoading2] = useState(false)
 
 
 
@@ -26,6 +29,7 @@ const BelongPage = (props) => {
             },
             success: function (response, textStatus, xhr) {
                 setStocks(response);
+                setLoading(false)
             },
             error: function (response) {
                 toast.error("Erreur lors du chargement des stocks...")
@@ -47,6 +51,7 @@ const BelongPage = (props) => {
             dataType: "json",
             success: function (response, textStatus, xhr) {
                 setArticles(response)
+                setLoading2(false)
             },
             error: function (response) {
                 toast.error("Erreur lors du chargement des articles")
@@ -54,31 +59,13 @@ const BelongPage = (props) => {
         })
     }
 
-    const fetchStockCurrent = async id => {
-        //on fait le call ajax pour obtenir tout les articles du stock
-        await $.ajax({
-            url: 'http://localhost:8000/api/stocks/' + id,
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + window.localStorage.getItem("authToken"),
-            },
-            contentType: "application/json",
-            dataType: "json",
-            success: function (response, textStatus, xhr) {
-                setStockCurrent(response)
-            },
-            error: function (response) {
-                toast.error("Erreur lors du chargement des articles")
-            },
-        })
-    }
 
     //je crée ma fonction handleChange, pour qu'au moment où un stock est selectionné, le tableau de ses articles se remplissent
     const handleChange = (event) => {
         const idStockSelect = event.currentTarget.value  //ici on arrive a récupére l'id du stock selectionné
+        setLoading2(true)
         //on appelle notre fonction de call ajax pour récupérer les article
         fetchArticle(idStockSelect);
-        fetchStockCurrent(idStockSelect);
     }
 
 
@@ -113,23 +100,31 @@ const BelongPage = (props) => {
 
     return (<>
         <h1>Ajouter un article à un stock</h1>
-
-        <div className="text-center pt-3">
-            <h3 className="mb-5">Selectionnez un stock</h3>
-            <Select
-                name='stock'
-                label='Votre stock :'
-                value={stocks.label}
-                //error={errors.stocks}
-                onChange={handleChange}
-            >
-                <option>---Liste déroulante---</option>
-                {stocks.map((stock) => (
-                    <option key={stock.id} value={stock.id}>{stock.label}</option>
-                ))}
-            </Select>
-        </div>
-
+        {!loading &&
+            <div className="text-center pt-3">
+                <h3 className="mb-5">Selectionnez un stock</h3>
+                <Select
+                    name='stock'
+                    label='Votre stock :'
+                    value={stocks.label}
+                    //error={errors.stocks}
+                    onChange={handleChange}
+                >
+                    <option>---Liste déroulante---</option>
+                    {stocks.map((stock) => (
+                        <option key={stock.id} value={stock.id}>{stock.label}</option>
+                    ))}
+                </Select>
+            </div>
+        }
+        <form >
+            <div className="form-group">
+                <Link to="/belongs" className="btn btn-link" >
+                    Retour aux détails des stocks
+                </Link>
+            </div>
+        </form>
+        {loading && <CalloutStripLoader />}
         <table className="table table-hover mt-1">
             <thead>
                 <tr>
@@ -139,29 +134,26 @@ const BelongPage = (props) => {
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-                {articles.map((article) => (
-                    <tr key={article.id}>
-                        <td>{article.ref}</td>
-                        <td>{article.label}</td>
-                        <td>{article.price}</td>
-                        <td>
-                            <button onClick={() => handleEdit(article, stockCurrent)} className="btn btn-sm btn-warning mr-1">Ajouter</button>
+            {!loading2 &&
+                <tbody>
+                    {articles.map((article) => (
+                        <tr key={article.id}>
+                            <td>{article.ref}</td>
+                            <td>{article.label}</td>
+                            <td>{article.price}</td>
+                            <td>
+                                <button onClick={() => handleEdit(article, stockCurrent)} className="btn btn-sm btn-warning mr-1">Ajouter</button>
 
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            }
         </table>
+        {loading2 && <TableLoader />}
 
 
-        <form >
-            <div className="form-group">
-                <Link to="/belongs" className="btn btn-link" >
-                    Retour aux détails des stocks
-                </Link>
-            </div>
-        </form>
+
     </>);
 }
 

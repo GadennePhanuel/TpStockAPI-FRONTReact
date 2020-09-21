@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import TableLoader from "../components/loaders/TableLoader";
 
 const StocksPage = (props) => {
   const [stocks, setStocks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true)
 
   //au chargement du composant, on va chercher notre liste des Stocks avec un call à notre API
   useEffect(() => {
@@ -20,6 +22,7 @@ const StocksPage = (props) => {
       },
       success: function (response, textStatus, xhr) {
         setStocks(response);
+        setLoading(false)
       },
       error: function (response) {
         toast.error("Erreur interne lors du chargement des stocks")
@@ -103,43 +106,45 @@ const StocksPage = (props) => {
         />
       </div>
 
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th>Label</th>
-            <th className="text-center">Nombre de références d'articles</th>
-            <th className="text-center">Montant total</th>
-            <th></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {paginatedStocks.map((stock) => (
-            <tr key={stock.label}>
-              <td>{stock.label}</td>
-              <td className="text-center">
-                <span className="badge badge-primary">
-                  {stock.totalArticleCurrentStock}
-                </span>
-              </td>
-              <td className="text-center">
-                {stock.totalAmountOfArticleInCurrentStock.toLocaleString()} €
-              </td>
-              <td>
-                <button onClick={() => handleEdit(stock.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
-                <button
-                  onClick={() => handleDelete(stock.id)}
-                  disabled={stock.totalArticleCurrentStock > 0}
-                  className="btn btn-sm btn-danger"
-                >
-                  Supprimer
-                </button>
-              </td>
+      {!loading &&
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th className="text-center">Nombre de références d'articles</th>
+              <th className="text-center">Montant total</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
 
+          <tbody>
+            {paginatedStocks.map((stock) => (
+              <tr key={stock.label}>
+                <td>{stock.label}</td>
+                <td className="text-center">
+                  <span className="badge badge-primary">
+                    {stock.totalArticleCurrentStock}
+                  </span>
+                </td>
+                <td className="text-center">
+                  {stock.totalAmountOfArticleInCurrentStock.toLocaleString()} €
+              </td>
+                <td>
+                  <button onClick={() => handleEdit(stock.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
+                  <button
+                    onClick={() => handleDelete(stock.id)}
+                    disabled={stock.totalArticleCurrentStock > 0}
+                    className="btn btn-sm btn-danger"
+                  >
+                    Supprimer
+                </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      }
+      {loading && <TableLoader />}
       {itemsPerPage < filteredStocks.length && (
         <Pagination
           currentPage={currentPage}

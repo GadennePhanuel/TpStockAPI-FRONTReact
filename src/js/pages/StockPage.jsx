@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Field from "../components/forms/Field";
+import CalloutStripLoader from "../components/loaders/CalloutStripLoader";
 
 const StockPage = (props) => {
   const { id } = props.match.params
+  const [loading, setLoading] = useState(false)
 
 
   const [stock, setStock] = useState({
@@ -36,6 +38,7 @@ const StockPage = (props) => {
       success: function (response, textStatus, xhr) {
         const { label } = xhr.responseJSON
         setStock({ label })
+        setLoading(false)
       },
       error: function (response) {
         toast.error("Erreur interne lors du chargement du stock concerné")
@@ -46,6 +49,7 @@ const StockPage = (props) => {
 
   useEffect(() => {
     if (id !== "new") {
+      setLoading(true)
       setEditing(true)
       fetchStock(id)
     }
@@ -137,15 +141,17 @@ const StockPage = (props) => {
       {(!editing && <h1>Création d'un stock</h1>) || <h1>Modification du stock</h1>}
 
       <form onSubmit={handleSubmit}>
-        <Field
-          name="label"
-          label="Nom"
-          placeholder="Nom du stock..."
-          value={stock.label}
-          onChange={handleChange}
-          error={errors.label}
-        />
-
+        {!loading &&
+          <Field
+            name="label"
+            label="Nom"
+            placeholder="Nom du stock..."
+            value={stock.label}
+            onChange={handleChange}
+            error={errors.label}
+          />
+        }
+        {loading && <CalloutStripLoader />}
         <div className="form-group">
           <button type="submit" className="btn btn-success">
             Enregistrer

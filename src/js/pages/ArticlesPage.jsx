@@ -2,12 +2,14 @@ import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import TableLoader from "../components/loaders/TableLoader";
 import Pagination from "../components/Pagination";
 
 const ArticlesPage = (props) => {
   const [articles, setArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true)
 
   //au chargement du composant, on va chercher notre liste des Articles avec un call à notre API
   useEffect(() => {
@@ -20,6 +22,7 @@ const ArticlesPage = (props) => {
       },
       success: function (response, textStatus, xhr) {
         setArticles(response);
+        setLoading(false);
       },
       error: function (response) {
         toast.error("Erreur lors du chargements des articles...")
@@ -109,52 +112,55 @@ const ArticlesPage = (props) => {
         />
       </div>
 
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th>Référence</th>
-            <th>label</th>
-            <th>Stock/Quantité</th>
-            <th className="text-center">Prix</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedArticles.map((article) => (
-            <tr key={article.id}>
-              <td>{article.ref}</td>
-              <td>{article.label}</td>
-              <td>
-                <table className="table">
-                  <tbody className="table">
-                    {article.belongs.map((belong) => (
-                      <tr key={belong.id}>
-                        <td>{belong.stock.label}</td>
-                        <td>{belong.qty}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </td>
-              <td className="text-center">
-                <span className="badge badge-primary">
-                  {article.price.toLocaleString()} €
-                </span>
-              </td>
-              <td>
-                <button onClick={() => handleEdit(article.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
-                <button
-                  onClick={() => handleDelete(article.id)}
-                  disabled={article.belongs.length > 0}
-                  className="btn btn-sm btn-danger"
-                >
-                  Supprimer
-                </button>
-              </td>
+      {!loading &&
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>label</th>
+              <th>Stock/Quantité</th>
+              <th className="text-center">Prix</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginatedArticles.map((article) => (
+              <tr key={article.id}>
+                <td>{article.ref}</td>
+                <td>{article.label}</td>
+                <td>
+                  <table className="table">
+                    <tbody className="table">
+                      {article.belongs.map((belong) => (
+                        <tr key={belong.id}>
+                          <td>{belong.stock.label}</td>
+                          <td>{belong.qty}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </td>
+                <td className="text-center">
+                  <span className="badge badge-primary">
+                    {article.price.toLocaleString()} €
+                </span>
+                </td>
+                <td>
+                  <button onClick={() => handleEdit(article.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
+                  <button
+                    onClick={() => handleDelete(article.id)}
+                    disabled={article.belongs.length > 0}
+                    className="btn btn-sm btn-danger"
+                  >
+                    Supprimer
+                </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      }
+      {loading && <TableLoader />}
 
       {itemsPerPage < filteredArticles.length && (
         <Pagination

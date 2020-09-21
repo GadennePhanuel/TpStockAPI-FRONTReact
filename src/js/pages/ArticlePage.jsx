@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import Field from '../components/forms/Field';
+import CalloutStripLoader from "../components/loaders/CalloutStripLoader";
 
 const ArticlePage = (props) => {
     const { id } = props.match.params
+    const [loading, setLoading] = useState(false)
 
     const [article, setArticle] = useState({
         label: "",
@@ -39,6 +41,7 @@ const ArticlePage = (props) => {
             success: function (response, textStatus, xhr) {
                 const { label, price, ref } = xhr.responseJSON
                 setArticle({ label, price, ref })
+                setLoading(false)
             },
             error: function (response) {
                 toast.error("Erreur lors du chargement...")
@@ -48,6 +51,7 @@ const ArticlePage = (props) => {
 
     useEffect(() => {
         if (id !== "new") {
+            setLoading(true)
             setEditing(true)
             fetchArticle(id)
         }
@@ -144,24 +148,34 @@ const ArticlePage = (props) => {
         <>
             <h1>Création d'un article</h1>
             <form onSubmit={handleSubmit}>
-                <Field name="label"
-                    label="Nom"
-                    placeholder="Nom de l'article..."
-                    onChange={handleChange}
-                    value={article.label}
-                    error={errors.label} ></Field>
-                <Field name="price"
-                    label="Prix"
-                    placeholder="Prix de l'article..."
-                    onChange={handleChange}
-                    value={article.price}
-                    error={errors.price} ></Field>
-                <Field name="ref"
-                    label="Référence"
-                    placeholder="Référence de l'article..."
-                    onChange={handleChange}
-                    value={article.ref}
-                    error={errors.ref} ></Field>
+                {!loading &&
+                    <Field name="label"
+                        label="Nom"
+                        placeholder="Nom de l'article..."
+                        onChange={handleChange}
+                        value={article.label}
+                        error={errors.label} ></Field>
+                }
+                {loading && <CalloutStripLoader />}
+                {!loading &&
+                    <Field name="price"
+                        label="Prix"
+                        placeholder="Prix de l'article..."
+                        onChange={handleChange}
+                        value={article.price}
+                        error={errors.price} ></Field>
+                }
+                {loading && <CalloutStripLoader />}
+                {!loading &&
+                    <Field name="ref"
+                        label="Référence"
+                        placeholder="Référence de l'article..."
+                        onChange={handleChange}
+                        value={article.ref}
+                        error={errors.ref} ></Field>
+                }
+                {loading && <CalloutStripLoader />}
+
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">
                         Enregistrer
