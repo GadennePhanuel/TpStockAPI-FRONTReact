@@ -39,6 +39,9 @@ const StocksPage = (props) => {
       url: "http://localhost:8000/api/stocks/" + id,
       method: "DELETE",
       dataType: "json",
+      headers: {
+        Authorization: "Bearer " + window.localStorage.getItem("authToken"),
+      },
       success: function (response, textStatus, xhr) { },
       error: function (response, textStatus, xhr) {
         //si ça n'as pas marché je rétabli le tableau des stocks dans son état original

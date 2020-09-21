@@ -41,6 +41,11 @@ const Navbar = ({ history }) => {
               Liste de mes Articles
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/belongs">
+              Détails stock
+            </NavLink>
+          </li>
         </ul>
         <ul className="navbar-nav ml-auto">
           {(!isAuthenticated && (
@@ -57,12 +62,12 @@ const Navbar = ({ history }) => {
               </li>{" "}
             </>
           )) || (
-            <li className="nav-item">
-              <button onClick={handleLogout} className="btn btn-danger">
-                Deconnection !
+              <li className="nav-item">
+                <button onClick={handleLogout} className="btn btn-danger">
+                  Deconnection !
               </button>
-            </li>
-          )}
+              </li>
+            )}
         </ul>
       </div>
     </nav>

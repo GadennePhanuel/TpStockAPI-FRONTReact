@@ -1,7 +1,7 @@
+import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Field from "../components/forms/Field";
-import $ from "jquery";
 
 const StockPage = (props) => {
   const { id } = props.match.params
@@ -18,7 +18,10 @@ const StockPage = (props) => {
 
   const [editing, setEditing] = useState(false);
 
-
+  /**
+   * recupération du stock en fonction de l'id
+   * @param {} id 
+   */
   const fetchStock = async id => {
     //si on est sur la modif d'un stock, on lance une requete HTTP pour récuperer le stock en question
     await $.ajax({
@@ -54,7 +57,7 @@ const StockPage = (props) => {
   };
 
   /**
-   * Requete HTTP pour créer un stock
+   * Requete HTTP pour créer un stock ou le modifier
    * @param {*} event 
    */
   const handleSubmit = (event) => {

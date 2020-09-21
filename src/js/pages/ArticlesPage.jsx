@@ -1,5 +1,6 @@
 import $ from "jquery";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 
 const ArticlesPage = (props) => {
@@ -26,7 +27,10 @@ const ArticlesPage = (props) => {
     });
   }, []);
 
-  //au click on supprime un article
+  /**
+   * au click on supprime un article
+   * @param {*} id 
+   */
   const handleDelete = (id) => {
     //je fais une copie du tableau original
     const originalArticles = [...articles];
@@ -38,7 +42,10 @@ const ArticlesPage = (props) => {
       url: "http://localhost:8000/api/articles/" + id,
       method: "DELETE",
       dataType: "json",
-      success: function (response, textStatus, xhr) {},
+      headers: {
+        Authorization: "Bearer " + window.localStorage.getItem("authToken"),
+      },
+      success: function (response, textStatus, xhr) { },
       error: function (response, textStatus, xhr) {
         //si ça n'as pas marché je rétabli le tableau des stocks dans son état original
         setArticles(originalArticles);
@@ -46,6 +53,15 @@ const ArticlesPage = (props) => {
       },
     });
   };
+
+  /**
+ * redirection quand on veut editer un article
+ * @param {*} page 
+ */
+  const handleEdit = (id) => {
+    props.history.replace("/articles/" + id)
+  }
+
 
   //PAGINATION && Champ de recherche du tableau
   const handlePageChange = (page) => {
@@ -74,7 +90,12 @@ const ArticlesPage = (props) => {
 
   return (
     <>
-      <h1>Liste des articles</h1>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h1>Liste des Articles</h1>
+        <Link to="/articles/new" className="btn btn-primary">
+          Créer un article
+        </Link>
+      </div>
 
       <div className="form-group">
         <input
@@ -119,7 +140,7 @@ const ArticlesPage = (props) => {
                 </span>
               </td>
               <td>
-                <button className="btn btn-sm btn-warning mr-1">Editer</button>
+                <button onClick={() => handleEdit(article.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
                 <button
                   onClick={() => handleDelete(article.id)}
                   disabled={article.belongs.length > 0}
