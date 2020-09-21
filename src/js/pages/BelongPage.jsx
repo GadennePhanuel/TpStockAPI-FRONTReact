@@ -27,7 +27,6 @@ const BelongPage = (props) => {
                 setStocks(response);
             },
             error: function (response) {
-                console.log(response);
                 alert(response.status + " " + response.statusText);
             },
         });

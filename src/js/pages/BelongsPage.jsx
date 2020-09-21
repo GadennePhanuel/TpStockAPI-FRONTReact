@@ -22,7 +22,6 @@ const BelongsPage = (props) => {
                 setStocks(response);
             },
             error: function (response) {
-                console.log(response);
                 alert(response.status + " " + response.statusText);
             },
         });
@@ -70,7 +69,6 @@ const BelongsPage = (props) => {
      * @param {*} id 
      */
     const handleDelete = (id) => {
-        console.log(id)
 
         //copie du tableau original
         const originalBelongs = [...belongs];

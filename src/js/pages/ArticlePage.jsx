@@ -120,7 +120,6 @@ const ArticlePage = (props) => {
                     props.history.replace('/articles')
                 },
                 error: function (response) {
-                    console.log(response.responseJSON)
                     if (response.responseJSON['violations']) {
                         const apiErrors = {};
                         response.responseJSON['violations'].forEach(violation => {

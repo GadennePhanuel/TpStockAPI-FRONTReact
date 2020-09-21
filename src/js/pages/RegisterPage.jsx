@@ -30,7 +30,6 @@ const RegisterPage = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        console.log(user)
 
         $.ajax({
             url: "http://localhost:8000/api/users",

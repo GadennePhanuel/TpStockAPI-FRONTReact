@@ -43,7 +43,6 @@ const BelongQtyPage = (props) => {
                 setBelong({ article, stock, qty })
             },
             error: function (response) {
-                console.log(response.responseJSON)
                 if (response.responseJSON['violations']) {
                     const apiErrors = {};
                     response.responseJSON['violations'].forEach(violation => {
@@ -79,7 +78,6 @@ const BelongQtyPage = (props) => {
                 "qty": parseFloat(belong.qty)
             }),
             success: function (response, textStatus, xhr) {
-                console.log(response)
                 props.history.replace('/belongs')
             },
             error: function (response) {
