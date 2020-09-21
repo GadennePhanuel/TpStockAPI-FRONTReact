@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { HashRouter, Route, Switch, withRouter } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "./js/components/Navbar";
 import PrivateRoute from "./js/components/PrivateRoute";
 import AuthContext from "./js/contexts/AuthContext";
@@ -49,6 +51,7 @@ const App = () => {
           </Switch>
         </main>
       </HashRouter>
+      <ToastContainer position={toast.POSITION.TOP_CENTER} />
     </AuthContext.Provider>
   );
 };

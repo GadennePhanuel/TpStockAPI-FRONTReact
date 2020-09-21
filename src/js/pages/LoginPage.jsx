@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { toast } from "react-toastify";
 import Field from "../components/forms/Field";
 import AuthContext from "../contexts/AuthContext";
 
@@ -35,6 +36,9 @@ const LoginPage = ({ history }) => {
       //je stocke mon token dans le localStorage
       window.localStorage.setItem("authToken", token);
 
+      //affichage d'un notif
+      toast.success("Vous êtes connecté 😎")
+      toast.dark("❗❗❗ N'oubliez pas de porter votre masque 😷😷😷")
       //je fait la redirection
       history.replace("/stocks");
     } catch (error) {
@@ -42,6 +46,7 @@ const LoginPage = ({ history }) => {
       setError(
         "Aucun compte pour cette utilisateur ou alors les informations ne correspondent pas"
       );
+      toast.error("Une erreur est survenu 😂")
     }
   };
 

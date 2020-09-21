@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Field from '../components/forms/Field';
 import $ from "jquery";
+import { toast } from 'react-toastify';
 
 
 
@@ -44,6 +45,7 @@ const RegisterPage = (props) => {
             }),
             success: function (response, textStatus, xhr) {
                 setErrors({})
+                toast.success("Vous êtes inscrit, vsou pouvez vous connecter ➡")
                 props.history.replace('/login')
             },
             error: function (response) {
@@ -56,6 +58,7 @@ const RegisterPage = (props) => {
                     })
                     setErrors(apiErrors)
                 }
+                toast.error("Erreur dans votre formulaire 😂")
             },
         })
     }

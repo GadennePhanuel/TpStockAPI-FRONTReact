@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Field from "../components/forms/Field";
 
 const StockPage = (props) => {
@@ -37,6 +38,7 @@ const StockPage = (props) => {
         setStock({ label })
       },
       error: function (response) {
+        toast.error("Erreur interne lors du chargement du stock concerné")
         console.log("error, 404 not found")
       },
     })
@@ -78,6 +80,7 @@ const StockPage = (props) => {
         }),
         success: function (response, textStatus, xhr) {
           setErrors({})
+          toast.success("le nom du stock a bien été modifié")
           props.history.replace('/stocks')
         },
         error: function (response) {
@@ -90,6 +93,7 @@ const StockPage = (props) => {
             })
             setErrors(apiErrors)
           }
+          toast.error("Erreur interne...")
         },
       });
 
@@ -108,6 +112,7 @@ const StockPage = (props) => {
         }),
         success: function (response, textStatus, xhr) {
           setErrors({})
+          toast.success("Le stock " + stock.label + " a bien été créé !")
           props.history.replace('/stocks')
         },
         error: function (response) {
@@ -120,6 +125,7 @@ const StockPage = (props) => {
             })
             setErrors(apiErrors)
           }
+          toast.error("Erreur interne...")
         },
       });
     }

@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 import Field from '../components/forms/Field';
 
 const ArticlePage = (props) => {
@@ -40,7 +41,7 @@ const ArticlePage = (props) => {
                 setArticle({ label, price, ref })
             },
             error: function (response) {
-                console.log("error, 404 not found")
+                toast.error("Erreur lors du chargement...")
             },
         })
     }
@@ -85,6 +86,7 @@ const ArticlePage = (props) => {
                 }),
                 success: function (response, textStatus, xhr) {
                     setErrors({})
+                    toast.success("L'article a bien été modifié !")
                     props.history.replace('/articles')
                 },
                 error: function (response) {
@@ -97,6 +99,7 @@ const ArticlePage = (props) => {
                         })
                         setErrors(apiErrors)
                     }
+                    toast.error("Erreur dans votre formulaire...")
                 },
             });
 
@@ -117,6 +120,7 @@ const ArticlePage = (props) => {
                 }),
                 success: function (response, textStatus, xhr) {
                     setErrors({})
+                    toast.success("Votre article a bien été créé !")
                     props.history.replace('/articles')
                 },
                 error: function (response) {
@@ -129,6 +133,7 @@ const ArticlePage = (props) => {
                         })
                         setErrors(apiErrors)
                     }
+                    toast.error("Erreur dans votre formulaire...")
                 },
             });
         }

@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Pagination from "../components/Pagination";
 
 const ArticlesPage = (props) => {
@@ -21,7 +22,7 @@ const ArticlesPage = (props) => {
         setArticles(response);
       },
       error: function (response) {
-        alert(response.status + " " + response.statusText);
+        toast.error("Erreur lors du chargements des articles...")
       },
     });
   }, []);
@@ -44,11 +45,13 @@ const ArticlesPage = (props) => {
       headers: {
         Authorization: "Bearer " + window.localStorage.getItem("authToken"),
       },
-      success: function (response, textStatus, xhr) { },
+      success: function (response, textStatus, xhr) {
+        toast.success("L'article a bien été supprimé")
+      },
       error: function (response, textStatus, xhr) {
         //si ça n'as pas marché je rétabli le tableau des stocks dans son état original
         setArticles(originalArticles);
-        console.log("error " + response);
+        toast.error("Erreur interne lors de la supression...")
       },
     });
   };

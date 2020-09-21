@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import $ from "jquery";
 import Field from '../components/forms/Field';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const BelongQtyPage = (props) => {
 
@@ -43,15 +44,8 @@ const BelongQtyPage = (props) => {
                 setBelong({ article, stock, qty })
             },
             error: function (response) {
-                if (response.responseJSON['violations']) {
-                    const apiErrors = {};
-                    response.responseJSON['violations'].forEach(violation => {
-                        if ((apiErrors[violation.propertyPath]) === undefined) {
-                            apiErrors[violation.propertyPath] = violation.message;
-                        }
-                    })
-                    setErrors(apiErrors)
-                }
+
+                toast.error("Erreur interne lors du chargement du lien courant")
             },
         })
     }, [id])
@@ -78,11 +72,21 @@ const BelongQtyPage = (props) => {
                 "qty": parseFloat(belong.qty)
             }),
             success: function (response, textStatus, xhr) {
+                setErrors({})
+                toast.success("La quantité de l'article " + belong.article.ref + " a bien été modifié pour le stock " + belong.stock.label)
                 props.history.replace('/belongs')
             },
             error: function (response) {
-                console.log(response.responseJSON)
-
+                if (response.responseJSON['violations']) {
+                    const apiErrors = {};
+                    response.responseJSON['violations'].forEach(violation => {
+                        if ((apiErrors[violation.propertyPath]) === undefined) {
+                            apiErrors[violation.propertyPath] = violation.message;
+                        }
+                    })
+                    setErrors(apiErrors)
+                }
+                toast.error("Erreur dans le formulaire...")
             },
         });
     }

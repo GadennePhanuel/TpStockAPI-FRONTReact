@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 import Select from '../components/forms/Select'
 
 const BelongsPage = (props) => {
@@ -22,7 +23,7 @@ const BelongsPage = (props) => {
                 setStocks(response);
             },
             error: function (response) {
-                alert(response.status + " " + response.statusText);
+                toast.error("Erreur lors du chargement...")
             },
         });
     }, []);
@@ -42,7 +43,7 @@ const BelongsPage = (props) => {
                 setBelongs(response)
             },
             error: function (response) {
-                console.log(response)
+                toast.error("Erreur losr du chargement...")
             },
         })
     }
@@ -83,10 +84,13 @@ const BelongsPage = (props) => {
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("authToken"),
             },
-            success: function (response, textStatus, xhr) { },
+            success: function (response, textStatus, xhr) {
+                toast.success("L'article  a bien été supprimé du stock")
+            },
             error: function (response, textStatus, xhr) {
                 //si ça n'as pas marché je rétabli le tableau des stocks dans son état original
                 setBelongs(originalBelongs);
+                toast.error("Erreur interne...")
                 console.log("error " + response);
             },
         });

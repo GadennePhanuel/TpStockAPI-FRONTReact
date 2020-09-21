@@ -2,6 +2,7 @@ import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const StocksPage = (props) => {
   const [stocks, setStocks] = useState([]);
@@ -21,7 +22,7 @@ const StocksPage = (props) => {
         setStocks(response);
       },
       error: function (response) {
-        alert(response.status + " " + response.statusText);
+        toast.error("Erreur interne lors du chargement des stocks")
       },
     });
   }, []);
@@ -41,10 +42,13 @@ const StocksPage = (props) => {
       headers: {
         Authorization: "Bearer " + window.localStorage.getItem("authToken"),
       },
-      success: function (response, textStatus, xhr) { },
+      success: function (response, textStatus, xhr) {
+        toast.success("Le stock a bien été supprimé")
+      },
       error: function (response, textStatus, xhr) {
         //si ça n'as pas marché je rétabli le tableau des stocks dans son état original
         setStocks(originalStocks);
+        toast.error("Erreur interne...")
         console.log("error " + response);
       },
     });

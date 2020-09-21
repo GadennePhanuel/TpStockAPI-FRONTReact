@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import $ from "jquery";
 import Select from '../components/forms/Select'
+import { toast } from 'react-toastify';
 
 const BelongPage = (props) => {
 
@@ -27,7 +28,7 @@ const BelongPage = (props) => {
                 setStocks(response);
             },
             error: function (response) {
-                alert(response.status + " " + response.statusText);
+                toast.error("Erreur lors du chargement des stocks...")
             },
         });
     }, []);
@@ -48,7 +49,7 @@ const BelongPage = (props) => {
                 setArticles(response)
             },
             error: function (response) {
-                console.log(response)
+                toast.error("Erreur lors du chargement des articles")
             },
         })
     }
@@ -67,7 +68,7 @@ const BelongPage = (props) => {
                 setStockCurrent(response)
             },
             error: function (response) {
-                console.log(response)
+                toast.error("Erreur lors du chargement des articles")
             },
         })
     }
@@ -94,16 +95,16 @@ const BelongPage = (props) => {
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify({
-                "article": '/api/articles/' + article,
-                "stock": '/api/stocks/' + stock,
+                "article": '/api/articles/' + article.id,
+                "stock": '/api/stocks/' + stock.id,
                 "qty": 0
             }),
             success: function (response, textStatus, xhr) {
-                console.log(response)
+                toast.success("L'article " + article.ref + " a été ajouter au stock " + stock.label)
                 props.history.replace('/belongs')
             },
             error: function (response) {
-                console.log(response.responseJSON)
+                toast.error("Erreur interne...")
 
             },
         });
@@ -145,7 +146,7 @@ const BelongPage = (props) => {
                         <td>{article.label}</td>
                         <td>{article.price}</td>
                         <td>
-                            <button onClick={() => handleEdit(article.id, stockCurrent.id)} className="btn btn-sm btn-warning mr-1">Ajouter</button>
+                            <button onClick={() => handleEdit(article, stockCurrent)} className="btn btn-sm btn-warning mr-1">Ajouter</button>
 
                         </td>
                     </tr>
