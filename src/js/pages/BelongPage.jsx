@@ -5,6 +5,7 @@ import Select from '../components/forms/Select'
 import { toast } from 'react-toastify';
 import TableLoader from "../components/loaders/TableLoader";
 import CalloutStripLoader from "../components/loaders/CalloutStripLoader";
+import Pagination from '../components/Pagination';
 
 const BelongPage = (props) => {
 
@@ -13,7 +14,8 @@ const BelongPage = (props) => {
     const [stockCurrent] = useState({});
     const [loading, setLoading] = useState(true)
     const [loading2, setLoading2] = useState(false)
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState("");
 
 
 
@@ -98,6 +100,29 @@ const BelongPage = (props) => {
     }
 
 
+    //PAGINATION && Champ de recherche du tableau
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handleSearch = (event) => {
+        setSearch(event.currentTarget.value);
+        setCurrentPage(1);
+    };
+    //filtrage des stocks en fonction de la recherche
+    const filteredArticles = articles.filter(
+        (a) =>
+            a.label.toLowerCase().includes(search.toLowerCase()) ||
+            a.ref.toLowerCase().includes(search.toLowerCase()) ||
+            a.price.toString().includes(search.toLowerCase())
+    );
+    //pagination des données
+    const itemsPerPage = 10;
+    const paginatedArticles = Pagination.getData(
+        filteredArticles,
+        currentPage,
+        itemsPerPage
+    );
+
     return (<>
         <h1>Ajouter un article à un stock</h1>
         {!loading &&
@@ -124,6 +149,17 @@ const BelongPage = (props) => {
                 </Link>
             </div>
         </form>
+
+        <div className="form-group">
+            <input
+                type="text"
+                onChange={handleSearch}
+                value={search}
+                className="form-control"
+                placeholder="Rechercher"
+            />
+        </div>
+
         {loading && <CalloutStripLoader />}
         <table className="table table-hover mt-1">
             <thead>
@@ -136,7 +172,7 @@ const BelongPage = (props) => {
             </thead>
             {!loading2 &&
                 <tbody>
-                    {articles.map((article) => (
+                    {paginatedArticles.map((article) => (
                         <tr key={article.id}>
                             <td>{article.ref}</td>
                             <td>{article.label}</td>
@@ -152,7 +188,14 @@ const BelongPage = (props) => {
         </table>
         {loading2 && <TableLoader />}
 
-
+        {itemsPerPage < filteredArticles.length && (
+            <Pagination
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                length={filteredArticles.length}
+                onPageChanged={handlePageChange}
+            />
+        )}
 
     </>);
 }

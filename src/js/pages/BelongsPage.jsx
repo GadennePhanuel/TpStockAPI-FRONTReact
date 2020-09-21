@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Select from '../components/forms/Select'
 import CalloutStripLoader from "../components/loaders/CalloutStripLoader";
 import TableLoader from "../components/loaders/TableLoader";
+import Pagination from "../components/Pagination";
 
 const BelongsPage = (props) => {
 
@@ -12,6 +13,8 @@ const BelongsPage = (props) => {
     const [belongs, setBelongs] = useState([]);
     const [loading, setLoading] = useState(true)
     const [loading2, setLoading2] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState("");
 
     //1- Auchargement requéte HTTP pour récupérer la liste de mes stocks
     useEffect(() => {
@@ -103,6 +106,33 @@ const BelongsPage = (props) => {
     }
 
 
+    //PAGINATION && Champ de recherche du tableau
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handleSearch = (event) => {
+        setSearch(event.currentTarget.value);
+        setCurrentPage(1);
+    };
+
+    //filtrage des stocks en fonction de la recherche
+    const filteredBelongs = belongs.filter(
+        (b) =>
+            b.article.label.toLowerCase().includes(search.toLowerCase()) ||
+            b.article.ref.toLowerCase().includes(search.toLowerCase()) ||
+            b.article.price.toString().includes(search.toLowerCase())
+    );
+
+    //pagination des données
+    const itemsPerPage = 10;
+    const paginatedBelongs = Pagination.getData(
+        filteredBelongs,
+        currentPage,
+        itemsPerPage
+    );
+
+
+
     return (<>
         <div className="d-flex justify-content-between align-items-center mb-5">
             <h1>Liste des articles d'un stock</h1>
@@ -128,6 +158,15 @@ const BelongsPage = (props) => {
                 </Select>
             </div>
         }
+        <div className="form-group">
+            <input
+                type="text"
+                onChange={handleSearch}
+                value={search}
+                className="form-control"
+                placeholder="Rechercher"
+            />
+        </div>
         {loading && <CalloutStripLoader />}
         <table className="table table-hover mt-1">
             <thead >
@@ -141,7 +180,7 @@ const BelongsPage = (props) => {
             </thead>
             {!loading2 &&
                 <tbody>
-                    {belongs.map((belong) => (
+                    {paginatedBelongs.map((belong) => (
                         <tr key={belong.id}>
                             <td>{belong.article.ref}</td>
                             <td>{belong.article.label}</td>
@@ -164,7 +203,14 @@ const BelongsPage = (props) => {
         </table>
         {loading2 && <TableLoader />}
 
-
+        {itemsPerPage < filteredBelongs.length && (
+            <Pagination
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                length={filteredBelongs.length}
+                onPageChanged={handlePageChange}
+            />
+        )}
 
     </>);
 }

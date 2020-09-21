@@ -51,7 +51,7 @@ const App = () => {
           </Switch>
         </main>
       </HashRouter>
-      <ToastContainer position={toast.POSITION.TOP_CENTER} />
+      <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={1500} />
     </AuthContext.Provider>
   );
 };
