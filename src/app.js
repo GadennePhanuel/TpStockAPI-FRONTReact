@@ -10,6 +10,7 @@ import BelongsPage from "./js/pages/BelongsPage";
 import BelongQtyPage from "./js/pages/BelongsQtyPage";
 import HomePage from "./js/pages/HomePage";
 import LoginPage from "./js/pages/LoginPage";
+import RegisterPage from "./js/pages/RegisterPage";
 import StockPage from "./js/pages/StockPage";
 import StocksPage from "./js/pages/StocksPage";
 import AuthAPI from "./js/services/authAPI";
@@ -36,6 +37,7 @@ const App = () => {
         <main className="container pt-5">
           <Switch>
             <Route path="/login" component={LoginPage} />
+            <Route path="/register" component={RegisterPage} />
             <PrivateRoute path="/stocks/:id" component={StockPage} />
             <PrivateRoute path="/articles/:id" component={ArticlePage} />
             <PrivateRoute path="/belongs/:id/qty" component={BelongQtyPage} />

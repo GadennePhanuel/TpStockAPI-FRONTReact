@@ -56,11 +56,44 @@ const BelongsPage = (props) => {
         fetchArticle(idStockSelect);
     }
 
+    /**
+     * redirection pour modifier la quantité de l'article en question dans le sotck en question
+     * @param {*} id 
+     */
     const handleEdit = (id) => {
         props.history.replace("/belongs/" + id + "/qty")
     }
 
 
+    /**
+     * call ajax pour supprimer l'article du sotck selectionné
+     * @param {*} id 
+     */
+    const handleDelete = (id) => {
+        console.log(id)
+
+        //copie du tableau original
+        const originalBelongs = [...belongs];
+
+        //je supprime de l'affichage le stock supprimé immédiatement
+        setBelongs(belongs.filter((belong) => belong.id !== id));
+
+        $.ajax({
+            url: "http://localhost:8000/api/belongs/" + id,
+            method: "DELETE",
+            dataType: "json",
+            headers: {
+                Authorization: "Bearer " + window.localStorage.getItem("authToken"),
+            },
+            success: function (response, textStatus, xhr) { },
+            error: function (response, textStatus, xhr) {
+                //si ça n'as pas marché je rétabli le tableau des stocks dans son état original
+                setBelongs(originalBelongs);
+                console.log("error " + response);
+            },
+        });
+
+    }
 
 
     return (<>
@@ -106,6 +139,13 @@ const BelongsPage = (props) => {
                         <td>{belong.qty}</td>
                         <td>
                             <button onClick={() => handleEdit(belong.id)} className="btn btn-sm btn-warning mr-1">Editer</button>
+                            <button
+                                onClick={() => handleDelete(belong.id)}
+                                disabled={belong.qty > 0}
+                                className="btn btn-sm btn-danger"
+                            >
+                                Supprimer
+                </button>
                         </td>
                     </tr>
                 ))}

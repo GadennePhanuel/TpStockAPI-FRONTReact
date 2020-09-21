@@ -147,6 +147,7 @@ const BelongPage = (props) => {
                         <td>{article.price}</td>
                         <td>
                             <button onClick={() => handleEdit(article.id, stockCurrent.id)} className="btn btn-sm btn-warning mr-1">Ajouter</button>
+
                         </td>
                     </tr>
                 ))}

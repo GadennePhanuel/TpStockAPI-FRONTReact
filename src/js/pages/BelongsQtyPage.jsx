@@ -38,13 +38,21 @@ const BelongQtyPage = (props) => {
             contentType: "application/json",
             dataType: "json",
             success: function (response, textStatus, xhr) {
-                console.log(response)
+                setErrors({})
                 const { article, stock, qty } = response
                 setBelong({ article, stock, qty })
             },
             error: function (response) {
                 console.log(response.responseJSON)
-
+                if (response.responseJSON['violations']) {
+                    const apiErrors = {};
+                    response.responseJSON['violations'].forEach(violation => {
+                        if ((apiErrors[violation.propertyPath]) === undefined) {
+                            apiErrors[violation.propertyPath] = violation.message;
+                        }
+                    })
+                    setErrors(apiErrors)
+                }
             },
         })
     }, [id])
@@ -58,8 +66,8 @@ const BelongQtyPage = (props) => {
         event.preventDefault();
 
         $.ajax({
-            url: "http://localhost:8000/api/belongs",
-            method: "POST",
+            url: "http://localhost:8000/api/belongs/" + id,
+            method: "PUT",
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("authToken"),
             },
@@ -98,7 +106,7 @@ const BelongQtyPage = (props) => {
                     label="Quantité"
                     onChange={handleChange}
                     value={belong.qty}
-                    error={errors.ref} ></Field>
+                    error={errors.qty} ></Field>
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">
                         Enregistrer

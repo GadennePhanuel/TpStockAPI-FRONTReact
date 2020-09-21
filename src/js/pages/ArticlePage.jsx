@@ -53,7 +53,7 @@ const ArticlePage = (props) => {
     }, [id])
 
 
-
+    //gestion des changements des inputs dans le formulaire
     const handleChange = (event) => {
         const { name, value } = event.currentTarget;
         setArticle({ ...article, [name]: value });
