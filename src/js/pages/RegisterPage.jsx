@@ -13,6 +13,7 @@ const RegisterPage = (props) => {
         firstName: "",
         lastName: "",
         password: "",
+        email: ""
     })
 
     const [errors, setErrors] = useState({
@@ -20,6 +21,7 @@ const RegisterPage = (props) => {
         firstName: "",
         lastName: "",
         password: "",
+        email: ""
     })
 
 
@@ -41,7 +43,8 @@ const RegisterPage = (props) => {
                 "username": user.username,
                 "firstName": user.firstName,
                 "lastName": user.lastName,
-                "password": user.password
+                "password": user.password,
+                "email": user.email
             }),
             success: function (response, textStatus, xhr) {
                 setErrors({})
@@ -62,17 +65,6 @@ const RegisterPage = (props) => {
             },
         })
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     return (<>
@@ -97,6 +89,13 @@ const RegisterPage = (props) => {
                 placeholder="Votre nom..."
                 error={errors.lastName}
                 value={user.lastName}
+                onChange={handleChange}
+            ></Field>
+            <Field name="email"
+                label="Email"
+                placeholder="Votre email..."
+                error={errors.email}
+                value={user.email}
                 onChange={handleChange}
             ></Field>
             <Field name="password"

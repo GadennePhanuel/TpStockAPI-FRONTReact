@@ -10,6 +10,7 @@ import ArticlesPage from "./js/pages/ArticlesPage";
 import BelongPage from "./js/pages/BelongPage";
 import BelongsPage from "./js/pages/BelongsPage";
 import BelongQtyPage from "./js/pages/BelongsQtyPage";
+import ForgotPassword from "./js/pages/ForgotPassword";
 import HomePage from "./js/pages/HomePage";
 import LoginPage from "./js/pages/LoginPage";
 import RegisterPage from "./js/pages/RegisterPage";
@@ -47,6 +48,7 @@ const App = () => {
             <PrivateRoute path="/belongs" component={BelongsPage} />
             <PrivateRoute path="/stocks" component={StocksPage} />
             <PrivateRoute path="/articles" component={ArticlesPage} />
+            <Route path="/forgotPassword" component={ForgotPassword} />
             <Route path="/" component={HomePage} />
           </Switch>
         </main>

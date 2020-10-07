@@ -11,7 +11,7 @@ const BelongPage = (props) => {
 
     const [stocks, setStocks] = useState([]);
     const [articles, setArticles] = useState([]);
-    const [stockCurrent] = useState({});
+    const [stockCurrentID, setStockCurrentID] = useState("");
     const [loading, setLoading] = useState(true)
     const [loading2, setLoading2] = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
@@ -54,6 +54,7 @@ const BelongPage = (props) => {
             success: function (response, textStatus, xhr) {
                 setArticles(response)
                 setLoading2(false)
+                setStockCurrentID(id)
             },
             error: function (response) {
                 toast.error("Erreur lors du chargement des articles")
@@ -74,7 +75,7 @@ const BelongPage = (props) => {
     /**
      * call ajax pour ajouter l'article selectionner dans le stock selectionné
      */
-    const handleEdit = (article, stock) => {
+    const handleEdit = (article, stockID) => {
         $.ajax({
             url: "http://localhost:8000/api/belongs",
             method: "POST",
@@ -85,11 +86,11 @@ const BelongPage = (props) => {
             dataType: "json",
             data: JSON.stringify({
                 "article": '/api/articles/' + article.id,
-                "stock": '/api/stocks/' + stock.id,
+                "stock": '/api/stocks/' + stockID,
                 "qty": 0
             }),
             success: function (response, textStatus, xhr) {
-                toast.success("L'article " + article.ref + " a été ajouter au stock " + stock.label)
+                toast.success("L'article " + article.ref + " a été ajouter au stock ")
                 props.history.replace('/belongs')
             },
             error: function (response) {
@@ -178,7 +179,7 @@ const BelongPage = (props) => {
                             <td>{article.label}</td>
                             <td>{article.price}</td>
                             <td>
-                                <button onClick={() => handleEdit(article, stockCurrent)} className="btn btn-sm btn-warning mr-1">Ajouter</button>
+                                <button onClick={() => handleEdit(article, stockCurrentID)} className="btn btn-sm btn-warning mr-1">Ajouter</button>
 
                             </td>
                         </tr>

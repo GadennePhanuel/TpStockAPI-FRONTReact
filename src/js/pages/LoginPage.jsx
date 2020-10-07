@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Field from "../components/forms/Field";
 import AuthContext from "../contexts/AuthContext";
@@ -79,6 +80,9 @@ const LoginPage = ({ history }) => {
           </button>
         </div>
       </form>
+      <Link to="/forgotPassword" className="btn btn-link">
+        Mot de passe oublié
+      </Link>
     </>
   );
 };
